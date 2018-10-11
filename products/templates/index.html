@@ -1,0 +1,21 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Old Egg Web App Home</h1>
+  <p>Welcome to OldEgg.com, a website developed by <em>Materialization Results</em>!</p>
+  <h2>Dynamic content</h2>
+  <p>The Website's database has the following record counts:</p>
+  <ul>
+    <li><strong>Products:</strong> {{ num_products }}</li>
+    <li><strong>Quantity on Hand:</strong> {{ num_instances }}</li>
+    <li><strong>Available:</strong> {{ num_instances_available }}</li>
+    <li><strong>Number of Categorys:</strong>{{ num_categories }}</li>
+    <li><strong>Brands:</strong> {{ num_brands }}</li>
+    <!--<li><strong>Reccomend:</strong>{{reccomended}}</li> -->
+  </ul>
+  <p>You have visited this page {{ num_visits }}{% if num_visits == 1 %} time{% else %} times{% endif %}.</p>
+{% endblock %}
+
+
+
+
