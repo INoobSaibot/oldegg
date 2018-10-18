@@ -47,6 +47,16 @@ class Product(models.Model):
 
 
 
+    
+    #still needs some work, defualt, required, null etc. just added to get
+    #shopping cart working
+    price = models.FloatField("Price")
+
+
+
+
+
+
 
 import uuid # Required for unique product instances
 
@@ -105,3 +115,55 @@ class Brand(models.Model):
     def __str__(self):
         """String for representing the Model object."""
         return f'{self.manufacturer_name}, {self.brand_name}'
+
+
+
+
+
+
+
+
+
+
+
+
+
+import uuid # Required for unique cart instances 
+
+
+
+
+
+
+class Cart(models.Model):
+    """Model representing a specific instance of a cart (i.e. that can be tracked in warehouse)."""
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text='Unique ID for this particular product across whole system')
+    #product = models.ForeignKey('Product', on_delete=models.SET_NULL, null=True) 
+    productList = models.ManyToManyField(Product)
+    #productLine = models.CharField(max_length=200)
+    next_ship = models.DateField(null=True, blank=True)
+    #category = models.ManyToManyField(Category, help_text='Select a category for this product')
+
+
+    CART_STATUS = (
+        ('b', 'Browsing'),
+        ('o', 'ORDER'),
+        ('a', 'a'),
+        ('c', 'Cancelled'),
+    )
+
+    status = models.CharField(
+        max_length=1,
+        choices=CART_STATUS,
+        blank=True,
+        default='t',
+        help_text='Product availability',
+    )
+
+    class Meta:
+        ordering = ['next_ship']
+
+    def __str__(self):
+        """String for representing the Model object."""
+        return f'{self.id} ({self.productList})'

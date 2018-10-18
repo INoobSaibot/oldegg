@@ -71,3 +71,12 @@ class StoreListView(generic.ListView):
 
 class ProductDetailView(generic.DetailView):
     model = Product
+
+
+
+
+
+
+
+class Show_cart(generic.ListView):
+    model = Product
