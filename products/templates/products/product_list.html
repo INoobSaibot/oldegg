@@ -4,6 +4,7 @@
   <h1>Product List</h1>
   {% if product_list %}
   <form action = "" method="post">
+      {% csrf_token %}
   <ul>
     {% for product in product_list %}
       <li>
