@@ -8,8 +8,8 @@ from django.contrib import admin
 
 
 
-from cart.models import Cart
+from cart.models import CartItem, TestCart
 
-#admin.site.register(CartItem)
-admin.site.register(Cart)
+admin.site.register(CartItem)
+admin.site.register(TestCart)
 

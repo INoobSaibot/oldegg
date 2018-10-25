@@ -3,7 +3,6 @@
 {% block content %}
   <h1>Product List</h1>
   {% if product_list %}
-  <form action = "" method="post">
   <ul>
     {% for product in product_list %}
       <li>
@@ -15,4 +14,3 @@
     <p>There are no products avaialable for sale</p>
   {% endif %}       
 {% endblock %}
-</form>
