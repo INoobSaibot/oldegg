@@ -80,5 +80,9 @@ class ProductDetailView(generic.DetailView):
 
 from django.http import HttpResponse
 
-def addToCart(request):
-    return HttpResponse("Youre post was accepted!!!!")
+def addToCart(request, ):
+    
+    
+    # or
+    return HttpResponse("Youre post was accepted!!!!<br><br>" + request.POST['choice'])
+

@@ -8,7 +8,11 @@
   <ul>
     {% for product in product_list %}
       <li>
-        <button type="submit" name="name" id="choice -1">Add To Cart</button><a href="{{ product.get_absolute_url }}">{{ product.name }}</a> ({{product.brand}})
+        <input type="submit" name="choice" id="choice{{forloop.counter}}" value="{{product.itemNumber }}">
+        <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+        <!--<button type="submit" name="name" id="choice -1">Add To Cart
+        </button><a href="{{ product.get_absolute_url }}">{{ product.name }}</a> ({{product.brand}})-->
+        
       </li>
     {% endfor %}
   </ul>
