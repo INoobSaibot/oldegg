@@ -3,12 +3,12 @@
 {% block content %}
   <h1>Product List</h1>
   {% if product_list %}
-  <form action = "" method="post">
+  <form action = "/products/addToCart" method="post">
       {% csrf_token %}
   <ul>
     {% for product in product_list %}
       <li>
-        <button type="submit">Add To Cart</button><a href="{{ product.get_absolute_url }}">{{ product.name }}</a> ({{product.brand}})
+        <button type="submit" name="name" id="choice -1">Add To Cart</button><a href="{{ product.get_absolute_url }}">{{ product.name }}</a> ({{product.brand}})
       </li>
     {% endfor %}
   </ul>

@@ -71,3 +71,14 @@ class StoreListView(generic.ListView):
 
 class ProductDetailView(generic.DetailView):
     model = Product
+
+
+
+
+
+
+
+from django.http import HttpResponse
+
+def addToCart(request):
+    return HttpResponse("Youre post was accepted!!!!")
