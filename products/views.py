@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+from products.models import Cart
 # Create your views here.
 
 
@@ -81,7 +81,11 @@ class ProductDetailView(generic.DetailView):
 from django.http import HttpResponse
 
 def addToCart(request, ):
-    
+    # some of this is all hard coded just to test will fix
+    cart = Cart()
+    cart.save()
+    cart.productList.add(Product.objects.get(pk=1))
+
     
     # or
     return HttpResponse("Youre post was accepted!!!!<br><br>" + request.POST['choice'])
