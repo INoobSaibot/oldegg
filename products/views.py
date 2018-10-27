@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from products.models import Cart
+
+from django.contrib.auth.models import User
 # Create your views here.
 
 
@@ -82,9 +84,24 @@ from django.http import HttpResponse
 
 def addToCart(request, ):
     # some of this is all hard coded just to test will fix
+    # cart model needs changed to hold one user to many carts
+    # why many carts you ask? IM GLAD YOU ASKED!!!
+        ##CARTS can immediatly be converted to orders, via, status atribute
+        ### Example, browsing, ORder, other stuff...
     cart = Cart()
     cart.save()
     cart.productList.add(Product.objects.get(pk=1))
+    
+    user = None
+    username = None
+    if request.user.is_authenticated:
+        username = request.user.username
+        print(username)
+        id =(request.user.id)
+        user = User.objects.get(pk=id)
+        cart.cartOwner = user
+        cart.save()
+    
 
     
     # or

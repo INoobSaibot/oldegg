@@ -1,3 +1,4 @@
 py manage.py makemigrations
 py manage.py migrate
-py manage.py runserver
+start /max http://localhost:8000/
+py manage.py runserver 8000

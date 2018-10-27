@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 # Create your models here.
 
 
@@ -141,6 +141,7 @@ class Cart(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text='Unique ID for this particular product across whole system')
     #product = models.ForeignKey('Product', on_delete=models.SET_NULL, null=True) 
     productList = models.ManyToManyField(Product)
+    cartOwner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     #productLine = models.CharField(max_length=200)
     next_ship = models.DateField(null=True, blank=True)
     #category = models.ManyToManyField(Category, help_text='Select a category for this product')
@@ -167,3 +168,4 @@ class Cart(models.Model):
     def __str__(self):
         """String for representing the Model object."""
         return f'{self.id} ({self.productList})'
+    
