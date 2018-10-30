@@ -30,7 +30,7 @@ class Product(models.Model):
 
     description = models.TextField(max_length=1000, help_text='Enter a brief description of the product')
     itemNumber = models.CharField('itemNumber', max_length=7, help_text='7 character item number ie 1237428 Olive garden dressing at costco')
-
+    
     # ManyToManyField used because categor can contain many products. And products can cover more than one category potentially
     # Category class has already been defined so we can specify the object above.
     category = models.ManyToManyField(Category, help_text='Select a category for this product')

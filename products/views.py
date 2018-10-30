@@ -88,22 +88,33 @@ def addToCart(request, ):
     # why many carts you ask? IM GLAD YOU ASKED!!!
         ##CARTS can immediatly be converted to orders, via, status atribute
         ### Example, browsing, ORder, other stuff...
-    cart = Cart()
-    cart.save()
-    cart.productList.add(Product.objects.get(pk=1))
+    #cart = Cart.objects.get(cartOwner=request.user)
+    #cart.save()
+    #cart.productList.add(Product.objects.get(itemNumber=request.POST['choice']))
     
+    
+
     user = None
     username = None
     if request.user.is_authenticated:
         username = request.user.username
         print(username)
         id =(request.user.id)
-        user = User.objects.get(pk=id)
-        cart.cartOwner = user
-        cart.save()
+        #user = User.objects.get(pk=id)
+        try:
+            cart = Cart.objects.get(cartOwner=request.user)
+        except:
+            cart = Cart()
+            cart.save()
+            cart.cartOwner = request.user
+            cart.save()
+        
+    cart.productList.add(Product.objects.get(itemNumber=request.POST['choice']))
+    cart.save()
     
 
     
     # or
+    
     return HttpResponse("Youre post was accepted!!!!<br><br>" + request.POST['choice'])
 
