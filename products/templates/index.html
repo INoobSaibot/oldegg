@@ -14,7 +14,22 @@
     <!--<li><strong>Reccomend:</strong>{{reccomended}}</li> -->
   </ul>
   <p>You have visited this page {{ num_visits }}{% if num_visits == 1 %} time{% else %} times{% endif %}.</p>
-{% endblock %}
+
+  <h1>Your Cart Contents:</h1>
+  <ul>
+  {% for product in cart.productList.all %}
+    <li>{{product}} -- ${{product.price}} </li>
+{% endfor %}
+</ul>
+  {% endblock %}
+
+
+<ul>
+    {% for product in cart.cartList.all %}
+        <li>{{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }}</li>
+    {% endfor %}
+</ul>
+
 
 
 

@@ -27,6 +27,25 @@ def index(request):
     ###
     num_categories = Category.objects.count()
 
+    ## cart stuff
+    if request.user.is_authenticated:
+        username = request.user.username
+        print(username)
+        id =(request.user.id)
+        try:
+            cart = Cart.objects.get(cartOwner=request.user)
+        except:
+            cart = Cart()
+            cart.save()
+            cart.cartOwner = request.user
+            cart.save()
+    else:
+        cart = Cart()
+        cart.save()
+        
+    #cart.productList.add(Product.objects.get(itemNumber=request.POST['choice']))
+    cart.save()
+
 
 
 
@@ -47,6 +66,7 @@ def index(request):
         'num_brands': num_brands,
         'num_categories': num_categories,
         'num_visits': num_visits,
+        'cart': cart,
     }
     # Render the html template index.html with data in the context variable
     return render(request, 'index.html', context=context)
