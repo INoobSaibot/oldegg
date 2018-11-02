@@ -16,19 +16,26 @@
   <p>You have visited this page {{ num_visits }}{% if num_visits == 1 %} time{% else %} times{% endif %}.</p>
 
   <h1>Your Cart Contents:</h1>
+  {% if cart.productList %}
+  <form action = "/products/removeFromCart" method="post">
   <ul>
   {% for product in cart.productList.all %}
-    <li>{{product}} -- ${{product.price}} </li>
+    <li>{{product}} -- ${{product.price}}
+    <input type='submit' name="choice" id="choice{{forloop.counter}}" value="remove">  
+    </li>
 {% endfor %}
 </ul>
-  {% endblock %}
+  </form>
 
+  <form action="/products/order" method="post">
+<input type="submit" name="order" id="order" value="order">
+</form>
 
-<ul>
-    {% for product in cart.cartList.all %}
-        <li>{{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }}</li>
-    {% endfor %}
-</ul>
+{% else %}
+  <p>Is empty</p>
+{% endif %}
+{% endblock %}
+
 
 
 
