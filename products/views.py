@@ -43,8 +43,19 @@ def index(request):
         cart = Cart()
         cart.save()
         
-    #cart.productList.add(Product.objects.get(itemNumber=request.POST['choice']))
     cart.save()
+    
+
+    #super ugly hacky code barf
+    def cartEmpty(c):
+        print(len(c.productList.all()))
+        return len(c.productList.all()) == False
+    
+    if cartEmpty(cart):
+        cart = False
+    
+    
+        
 
 
 
@@ -52,12 +63,6 @@ def index(request):
     # number of visis to this view, as counted in he session variable
     num_visits = request.session.get('num_visits', 0)
     request.session['num_visits'] = num_visits + 1
-
-
-
-
-
-
 
     context = {
         'num_products': num_products,
