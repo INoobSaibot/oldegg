@@ -18,10 +18,11 @@
   <h1>Your Cart Contents:</h1>
   {% if cart.productList %}
   <form action = "/products/removeFromCart" method="post">
+  {% csrf_token %}
   <ul>
   {% for product in cart.productList.all %}
     <li>{{product}} -- ${{product.price}}
-    <input type='submit' name="choice" id="choice{{forloop.counter}}" value="remove">  
+      <input type="submit" name="choice" id="choice{{forloop.counter}}" value="{{product.itemNumber }}">  
     </li>
 {% endfor %}
 </ul>
@@ -35,6 +36,21 @@
   <p>Is empty</p>
 {% endif %}
 {% endblock %}
+
+
+<form action = "/products/addToCart" method="post">
+  {% csrf_token %}
+<ul>
+{% for product in product_list %}
+  <li>
+    <input type="submit" name="choice" id="choice{{forloop.counter}}" value="{{product.itemNumber }}">
+    <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+    <!--<button type="submit" name="name" id="choice -1">Add To Cart
+    </button><a href="{{ product.get_absolute_url }}">{{ product.name }}</a> ({{product.brand}})-->
+    
+  </li>
+{% endfor %}
+</ul>
 
 
 

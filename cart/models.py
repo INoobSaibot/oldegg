@@ -10,6 +10,12 @@ class CartItem(models.Model):
     m = models.ForeignKey(Product,  on_delete=models.SET_NULL, null=True)
     user_id = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     #cart = models.ForeignKey('testCart', on_delete=models.SET_NULL, null=True)
+    quantity = models.IntegerField(default=1)
+
+    order_id = models.ForeignKey('TestCart', on_delete=models.SET_NULL, null=True)
+    def __str__(self):
+        """String for representing the Model object."""
+        return f'{self.m} x  [{self.quantity}]  For: {self.order_id}'
 
 
 
@@ -24,7 +30,10 @@ class TestCart(models.Model):
     """Model representing a specific instance of a cart (i.e. that can be tracked in warehouse)."""
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text='Unique ID for this particular product across whole system')
-    cartItems = models.ForeignKey(CartItem, on_delete=models.SET_NULL, null=True)
+    itemsInCart = models.ManyToManyField(CartItem)
+    cartOwner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    total = f'0.00'
+    #productLine = models.CharField(max_length=200)
     #theStuff = models.ManyToManyFi(otherCart, on_delete=models.SET_NULL, null=True)
     #product = models.ForeignKey('Product', on_delete=models.SET_NULL, null=True) 
     #productList = models.ManyToManyField(Product)
@@ -35,8 +44,8 @@ class TestCart(models.Model):
 
     CART_STATUS = (
         ('b', 'Browsing'),
-        ('o', 'ORDER'),
-        ('a', 'a'),
+        ('p', 'Paid Order'),
+        ('s', 'Shipped'),
         ('c', 'Cancelled'),
     )
 
@@ -53,7 +62,7 @@ class TestCart(models.Model):
 
     def __str__(self):
         """String for representing the Model object."""
-        return f'{self.id} ({self.cartItems})'
+        return f'{self.cartOwner}\'s Cart/Order id#  {self.id} total: {self.total}'
 
 
 

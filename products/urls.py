@@ -6,5 +6,6 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('store/', views.StoreListView.as_view(), name='store'),
     path('product/<int:pk>', views.ProductDetailView.as_view(), name='product-detail'),
-    path('addToCart', views.addToCart)
+    path('addToCart', views.addToCart),
+    path('removeFromCart', views.removeFromCart),
 ]
