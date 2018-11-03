@@ -5,13 +5,14 @@
   <form action = "/products/addToCart" method="post">
     {% csrf_token %}
 
-  <p><strong>Brand:</strong> <a href="">{{ product.brand }}</a></p> <!-- author detail link not yet defined -->
+  <p><strong>Brand:</strong> <a href="">{{ product.brand }}</a></p> <img src="/.{{product.picture}}.gif" alt="" style="width: 200px; height:210px;"><!-- detail link not yet defined -->
   <p><strong>Description:</strong> {{ product.description }}</p>
   <p><strong>Item Number:</strong> {{ product.itemNumber }}</p> 
   <p><strong>Price:</strong> {{ product.price }}</p><input type="submit" name="choice" value="{{product.itemNumber}}">
   <p><strong>Category:</strong> {% for category in product.category.all %} {{ category }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>  
 
   <div style="margin-left:20px;margin-top:20px">
+    
     <h4>Qoh:</h4>
 
     {% for each in product.productinstance_set.all %}

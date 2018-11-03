@@ -28,7 +28,8 @@
 </ul>
   </form>
 
-  <form action="/products/order" method="post">
+<form action="/products/order" method="post">
+  {% csrf_token %}
 <input type="submit" name="order" id="order" value="order">
 </form>
 

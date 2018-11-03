@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from products.models import Cart
-
+from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
 # Create your views here.
 
@@ -116,7 +116,8 @@ def addToCart(request, ):
    
     user = None
     username = None
-    
+    product = Product.objects.get(itemNumber=request.POST['choice'])
+
     if request.user.is_authenticated:
         username = request.user.username
         print(username)
@@ -132,10 +133,11 @@ def addToCart(request, ):
         cart = Cart()
         cart.save()
         
-    cart.productList.add(Product.objects.get(itemNumber=request.POST['choice']))
+    cart.productList.add(product)
     cart.save()
-    return (index(request,))
-    return render("Youre post was accepted!!!!<br><br>" + request.POST['choice'])
+    
+    return HttpResponseRedirect('product/'+ str(product.pk))
+    #return render("Youre post was accepted!!!!<br><br>" + request.POST['choice'])
 
 
 def removeFromCart(request, ):
@@ -148,3 +150,13 @@ def removeFromCart(request, ):
 
     #return HttpResponse()
     return (index(request,))
+
+
+def placeOrder(request,):
+    """ """
+    user = request.user
+    context = {
+
+    }
+
+    return render(request, 'completeOrder.html', context=context)
