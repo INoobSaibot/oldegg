@@ -134,14 +134,17 @@ def addToCart(request, ):
         
     cart.productList.add(Product.objects.get(itemNumber=request.POST['choice']))
     cart.save()
-    return HttpResponse("Youre post was accepted!!!!<br><br>" + request.POST['choice'])
+    return (index(request,))
+    return render("Youre post was accepted!!!!<br><br>" + request.POST['choice'])
 
 
 def removeFromCart(request, ):
     """ Quick and dirt remove from cart method"""
     cart = Cart.objects.get(cartOwner=request.user)
-    print('posted:' + request.POST['choice'] + '<---------------------')
+    #print('posted:' + request.POST['choice'] + '<---------------------')
     #print(Product.objects.get(itemNumber=request.POST['choice']))
     cart.productList.remove(Product.objects.get(itemNumber=request.POST['choice']))
     cart.save()
-    return HttpResponse('posted:' + request.POST['choice'] + '<---------------------')
+
+    #return HttpResponse()
+    return (index(request,))
