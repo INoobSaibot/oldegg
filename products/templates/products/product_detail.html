@@ -2,11 +2,13 @@
 
 {% block content %}
   <h1>We call it: {{ product.name }}</h1>
+  <form action = "/products/addToCart" method="post">
+    {% csrf_token %}
 
   <p><strong>Brand:</strong> <a href="">{{ product.brand }}</a></p> <!-- author detail link not yet defined -->
   <p><strong>Description:</strong> {{ product.description }}</p>
   <p><strong>Item Number:</strong> {{ product.itemNumber }}</p> 
-  <p><strong>Price:</strong> {{ product.price }}</p>  
+  <p><strong>Price:</strong> {{ product.price }}</p><input type="submit" name="choice" value="{{product.itemNumber}}">
   <p><strong>Category:</strong> {% for category in product.category.all %} {{ category }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>  
 
   <div style="margin-left:20px;margin-top:20px">
@@ -22,4 +24,8 @@
       <p class="text-muted"><strong>Id:</strong> {{each.id}}</p>
     {% endfor %}
   </div>
+</form>
 {% endblock %}
+
+
+<input type="submit" name="choice" id="choice{{forloop.counter}}" value="{{product.itemNumber }}">
