@@ -32,30 +32,15 @@ def index(request):
         username = request.user.username
         print(username)
         id =(request.user.id)
-        cart = Cart.objects.filter(cartOwner=request.user, status = 'b')[0]
-        
-        if cart_is_empty(cart):
-            cart=False
-            
-        '''
-        for shoppingCart in carts:
-            cart = shoppingCart
-            cart.save()
-            break'''
+        try:
+            cart = Cart.objects.filter(cartOwner=request.user, status = 'b')[0]
+        except:
+            c = Cart(cartOwner=request.user, status='b', shoppingSince=timezone.now())
+            c.save()
+        if cart:
+            if cart_is_empty(cart):
+                cart=False
 
-        #print('users browsing carts query length: '+ str(len(cart.productList.all())))
-
-        
-
-        #cart.save()
-        print(request.user.id)    
-        def newCart():
-            print("new cart")
-            cart = Cart(status='b', shoppingSince=timezone.now())
-            cart.save()
-            cart.cartOwner = request.user
-            cart.save()
-    
     # number of visis to this view, as counted in he session variable
     num_visits = request.session.get('num_visits', 0)
     request.session['num_visits'] = num_visits + 1
@@ -71,6 +56,9 @@ def index(request):
     }
     # Render the html template index.html with data in the context variable
     return render(request, 'index.html', context=context)
+
+
+
 
 def flattenCarts(qs):    
         for cart in carts:
@@ -161,7 +149,6 @@ def removeFromCart(request, ):
     #print(Product.objects.get(itemNumber=request.POST['choice']))
     cart.productList.remove(Product.objects.get(itemNumber=request.POST['choice']))
     cart.save()
-
     #return HttpResponse()
     return (index(request,))
 
@@ -313,5 +300,5 @@ def completeOrder(request):
     cart.cartOwner = request.user
     cart.save()
 
-    return HttpResponse("Your order is complete")
-    return render(request, 'completeOrder.html')
+    #return HttpResponse("Your order is complete")
+    return render(request, 'OrderAccepted.html')
