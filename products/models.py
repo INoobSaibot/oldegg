@@ -149,8 +149,8 @@ class Cart(models.Model):
 
     CART_STATUS = (
         ('b', 'Browsing'),
-        ('o', 'ORDER'),
-        ('a', 'a'),
+        ('p', 'Paid Order'),
+        ('s', 'Shipped'),
         ('c', 'Cancelled'),
     )
 
@@ -158,7 +158,7 @@ class Cart(models.Model):
         max_length=1,
         choices=CART_STATUS,
         blank=True,
-        default='t',
+        default='b',
         help_text='Product availability',
     )
 
@@ -177,14 +177,37 @@ class PaymentCard(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text='Unique ID for this particular product across whole system')
     cardNumber = models.CharField('CardNumber', max_length=16,help_text='Enter a fake card number')
     cvv = models.CharField("cvv", max_length=4, help_text="max length = 4")
-    
+    exp = models.CharField("Expires", max_length=5)
     name = models.CharField("Card Name: ", max_length=32,
     help_text="Enter a name for this payment, up to 32 characters!",
     null=True, blank=True)
 
-    cardHolder = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)    
+    # probably change this, to not be user as card holder, instead get post info 
+    cardHolder = models.CharField('CardHolder', max_length=64,help_text='Enter a CardHolder name')
     
     def __str__(self):
         """String for repsenting the Model object."""
         return f'{self.name} for: {self.cardHolder}'
+
+    def last4(self):
+        """Method to return last 4 to identify saved cards in checkout """
+        return f'ending in: {self.cardNumber[:4]}'
+
+class Wallette(models.Model):
+    """it holds payment cards """
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    paymentList = models.ManyToManyField(PaymentCard)
+
+
+    def __str__(self):
+        """String for representing the Model Wallette object"""
+        return f'{self.paymentList}--{self.owner}'
+
+
+
+
+class OrderHistory(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    add = models.ManyToManyField(Cart)
+    pass
     

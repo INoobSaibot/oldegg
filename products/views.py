@@ -11,6 +11,7 @@ from django.contrib.auth.models import User
 
 
 from products.models import Product, Brand, ProductInstance, Category
+from products.models import PaymentCard, Wallette, OrderHistory
 
 def index(request):
     """View function for home page of site."""
@@ -38,10 +39,10 @@ def index(request):
             cart = Cart()
             cart.save()
             cart.cartOwner = request.user
-            cart.save()
+
     else:
         cart = Cart()
-        cart.save()
+
         
     cart.save()
 
@@ -156,6 +157,58 @@ def placeOrder(request,):
     """ """
     # pull post stuff out into variables
     posted = request.POST
+    user = request.user
+    ERRORS = []
+
+    try:
+        w = Wallette.objects.get(owner=request.user)
+        w.save()
+    except:
+        w = Wallette()
+        w.owner = user
+        w.save()
+        return render(request, 'addCard.html', context=context)
+
+    #user.payments.add(pmt)
+    try:
+        card_holder = posted['card_holder']
+        cvv = posted['cvv']
+        card_number = posted['cardNumber']
+        expiration_date = posted['exp_month'] + "/" + posted['exp_year']
+        
+
+        p = PaymentCard()
+        p.cardHolder = card_holder
+        p.cvv = cvv
+        p.cardNumber = card_number
+        p.exp = expiration_date
+        p.save()
+        w.paymentList.add(p)
+    except:
+        pass
+    
+    payment_list = w.paymentList.all()
+    hasCard = (len(payment_list)) > 0
+
+    if posted.get('addCard') == "Different Card":
+        print("addcard")
+        print(hasCard)
+
+    context = {
+        'user': user,
+        'payment_list': payment_list,
+        'ERRORS': ERRORS,
+    }
+    print('whoah')
+    return render(request, 'completeOrder.html', context=context)
+
+
+def addPayment(request,):
+    """ """
+    # pull post stuff out into variables
+    posted = request.POST
+    user = request.user
+    #user.payments.add(pmt)
 
     card_holder = posted['card_holder']
     cvv = posted['cvv']
@@ -171,25 +224,16 @@ def placeOrder(request,):
 
     print(expiration_date)
 
+
+def completeOrder(request):
     user = request.user
-    #faked out payments list from db, fix this once models are in and available
+    cart = Cart.objects.get(cartOwner=user)
+    cart.status = 'p'
+    orderHistory = Cart.objects.get(cartOwner=user, status='p')
     
-    ERRORS = []
-    payment_list = [user.pk,]
-    if len(payment_list) < 2:
-        payment_list = False
-    context = {
-        'user': user,
-        'payment_list': payment_list,
-        'ERRORS': ERRORS,
-    }
-
-    return render(request, 'completeOrder.html', context=context)
+    cart.save()
 
 
-def addPayment(request,):
-    """ """
-    pmt = {}
+    orderHistory.add(cart)
     
-    user = request.user
-    user.payments.add(pmt)
+    return render(request, 'completeOrder.html')

@@ -7,7 +7,7 @@ from django.contrib import admin
 
 
 
-from products.models import PaymentCard
+from products.models import PaymentCard, Wallette
 from products.models import Brand, Category, Product, ProductInstance, Cart
 
 admin.site.register(Product)
@@ -16,3 +16,4 @@ admin.site.register(Category)
 admin.site.register(ProductInstance)
 admin.site.register(Cart)
 admin.site.register(PaymentCard)
+admin.site.register(Wallette)
