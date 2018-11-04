@@ -2,16 +2,12 @@ from django.shortcuts import render
 from products.models import Cart
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
-# Create your views here.
-
-
-
-
-
-
+from django.utils import timezone
 
 from products.models import Product, Brand, ProductInstance, Category
 from products.models import PaymentCard, Wallette, History
+# create your views here!
+
 
 def index(request):
     """View function for home page of site."""
@@ -29,37 +25,33 @@ def index(request):
     num_categories = Category.objects.count()
 
     ## cart stuff
+    #intitialize cart = False
+    cart = False
+
     if request.user.is_authenticated:
         username = request.user.username
         print(username)
         id =(request.user.id)
-        try:
-            cart = Cart.objects.get(cartOwner=request.user)
-        except:
-            cart = Cart()
+        cart = Cart.objects.filter(cartOwner=request.user, status = 'b')[0]
+        '''
+        for shoppingCart in carts:
+            cart = shoppingCart
+            cart.save()
+            break'''
+
+        #print('users browsing carts query length: '+ str(len(cart.productList)))
+
+        
+
+        #cart.save()
+        print(request.user.id)    
+        def newCart():
+            print("new cart")
+            cart = Cart(status='b', shoppingSince=timezone.now())
             cart.save()
             cart.cartOwner = request.user
-
-    else:
-        cart = Cart()
-
-        
-    cart.save()
-
-    #super ugly hacky code barf
-    def cartEmpty(c):
-        print(len(c.productList.all()))
-        return len(c.productList.all()) == False
+            cart.save()
     
-    if cartEmpty(cart):
-        cart = False
-    
-    
-        
-
-
-
-
     # number of visis to this view, as counted in he session variable
     num_visits = request.session.get('num_visits', 0)
     request.session['num_visits'] = num_visits + 1
@@ -76,6 +68,19 @@ def index(request):
     # Render the html template index.html with data in the context variable
     return render(request, 'index.html', context=context)
 
+def flattenCarts(qs):    
+        for cart in carts:
+            print(cart.id)
+            for productList in cart.productList.all():
+                #print("\t" + str(productList))
+                for product in [productList]:
+                    print("item: " + str(product))
+
+#super ugly hacky code barf
+def is_cartEmpty(c):
+    print("number of items on the cart: " + str(len(c.productList.all()))) #holy wowzas, will refactor
+    print(c.status)
+    return len(c.productList.all()) == False
 
 
 
@@ -123,10 +128,14 @@ def addToCart(request, ):
         username = request.user.username
         print(username)
         id =(request.user.id)
+
+        cart = Cart.objects.filter(cartOwner=request.user, status='b')[0]
         try:
-            cart = Cart.objects.get(cartOwner=request.user)
+            cart.productList.add(product)
+            cart.save()
+            
         except:
-            cart = Cart()
+            cart = Cart(status='b',cartOwner= request.user,shoppingSince=timezone.now())
             cart.save()
             cart.cartOwner = request.user
             cart.save()
@@ -134,8 +143,7 @@ def addToCart(request, ):
         cart = Cart()
         cart.save()
         
-    cart.productList.add(product)
-    cart.save()
+    
     
     return HttpResponseRedirect('product/'+ str(product.pk))
     #return render("Youre post was accepted!!!!<br><br>" + request.POST['choice'])
@@ -143,7 +151,7 @@ def addToCart(request, ):
 
 def removeFromCart(request, ):
     """ Quick and dirt remove from cart method"""
-    cart = Cart.objects.get(cartOwner=request.user)
+    cart = Cart.objects.filter(cartOwner=request.user, status='b')[0]
     #print('posted:' + request.POST['choice'] + '<---------------------')
     #print(Product.objects.get(itemNumber=request.POST['choice']))
     cart.productList.remove(Product.objects.get(itemNumber=request.POST['choice']))
@@ -278,7 +286,8 @@ def addPaymentCard(request,):
 
 def completeOrder(request):
     user = request.user
-    cart = Cart.objects.get(cartOwner=user)
+    orders = Cart.objects.filter(cartOwner=user)
+    cart = orders.filter(status='b')[0]
     cart.status = 'p'
     cart.save()
     try:
@@ -294,7 +303,7 @@ def completeOrder(request):
     history.save()
     
     # new cart associated to user
-    cart = Cart()
+    cart = Cart(shoppingSince = timezone.now())
     cart.save()
     cart.cartOwner = request.user
     cart.save()

@@ -161,13 +161,15 @@ class Cart(models.Model):
         default='b',
         help_text='Product availability',
     )
+    
+    shoppingSince = models.DateTimeField('date user grabbed this cart')
 
     class Meta:
         ordering = ['next_ship']
 
     def __str__(self):
         """String for representing the Model object."""
-        return f'{self.id} ({self.productList})'
+        return f'{self.cartOwner}\'s {self.status.upper()} : order cart'
 
 
 
@@ -191,7 +193,7 @@ class PaymentCard(models.Model):
 
     def last4(self):
         """Method to return last 4 to identify saved cards in checkout """
-        return f'ending in: {self.cardNumber[:4]}'
+        return f'ending in: {self.cardNumber[-4:]}'
 
 class Wallette(models.Model):
     """it holds payment cards """
