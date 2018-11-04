@@ -10,4 +10,6 @@ urlpatterns = [
     path('removeFromCart', views.removeFromCart, name='removeItem'),
     path('order', views.placeOrder, name='beginCheckOut'),
     path('completeOrder', views.completeOrder, name="completeOrder"),
+    path('addPaymentCard', views.addPaymentCard, name="addPaymentCard"),
+    path("cardForm", views.cardForm, name="cardForm"),
 ]

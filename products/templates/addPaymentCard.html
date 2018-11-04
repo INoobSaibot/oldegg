@@ -1,27 +1,15 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-    <h1>You're almost done</h1>
-    <h2>Choose your payment</h2>
+    <h1>Add Card</h1>
     {% if payment_list %}
-        <form action="completeOrder" method="post">
+        <form action="order" method="post">
 
         {% csrf_token %}
-        {% for payment in payment_list %}
-            <li>card {{payment.name}} -- {{payment.last4}}<button name="{{payment.id}}" value={{payment.id}}>Use this payment Card</button></li><br>
-        {% endfor %}
-    {% endif %}
-        <button type="submit" formaction="cardForm">Use different card</button><br>
-        </form>
-<!--
-<button type="submit">Submit</button><br>
-  <button type="submit" formaction="/action_page2.php">Submit to another page</button>
-
--->
-     
         
-    <!--<input type="submit" name="addCard" value="Add New Card">-->
-    <!--
+        <input type="submit" name="addCard" value="Different Card">
+        </form>
+    {% else %}
     <div class="payment">
         <form action="order" method=post>
         {% csrf_token %}
@@ -73,5 +61,5 @@
 
 
     </div>
--->
+    {% endif %}
 {% endblock %}

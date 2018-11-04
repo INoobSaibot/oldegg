@@ -154,12 +154,29 @@ def removeFromCart(request, ):
 
 
 def placeOrder(request,):
-    """ """
+    """
+    #super ugly hacky code barf
+    def cartEmpty(c):
+        print(len(c.productList.all()))
+        return len(c.productList.all()) == False
+    
+    if cartEmpty(cart):
+        cart = False
+     """
     # pull post stuff out into variables
     posted = request.POST
     user = request.user
     ERRORS = []
 
+    # eeew
+    def is_walletteEmpty(w):
+        """ public Bool Returns True or False 
+            Returns True if users walete collection of payment types 
+            has one or more payment card, returns False if users wallette has zero
+            or less payment card in the collection"""
+        print(len(w.paymentList.all()))
+        return len(w.paymentList.all())
+    
     try:
         w = Wallette.objects.get(owner=request.user)
         w.save()
@@ -168,7 +185,7 @@ def placeOrder(request,):
         w.owner = user
         w.save()
         return render(request, 'addCard.html', context=context)
-
+    
     #user.payments.add(pmt)
     try:
         card_holder = posted['card_holder']
@@ -200,21 +217,53 @@ def placeOrder(request,):
         'ERRORS': ERRORS,
     }
     print('whoah')
+    #print(p.exp)
+    #return HttpResponse("Your order is complete")
     return render(request, 'completeOrder.html', context=context)
 
+def cardForm(request,):
+    return render(request, "addPaymentCard.html")
 
-def addPayment(request,):
+
+
+def addPaymentCard(request,):
     """ """
     # pull post stuff out into variables
     posted = request.POST
     user = request.user
     #user.payments.add(pmt)
+    '''
+    card_holder = posted['card_holder']
+    cvv = posted['cvv']
+    card_number = posted['cardNumber']
+    expiration_date = posted['exp_month'] + "/" + posted['exp_year']
+    '''
+    
+    try:
+        w = Wallette.objects.get(owner=request.user)
+        w.save()
+    except:
+        w = Wallette()
+        w.owner = user
+        w.save()
 
     card_holder = posted['card_holder']
     cvv = posted['cvv']
     card_number = posted['cardNumber']
     expiration_date = posted['exp_month'] + "/" + posted['exp_year']
     
+
+    p = PaymentCard()
+    p.cardHolder = card_holder
+    p.cvv = cvv
+    p.cardNumber = card_number
+    p.exp = expiration_date
+    p.save()
+    w.paymentList.add(p)
+    w.save()
+    
+
+
     def printPost():
         print(posted.keys())
         print(card_holder)
@@ -223,6 +272,8 @@ def addPayment(request,):
         print(expiration_date)
 
     print(expiration_date)
+    return HttpResponseRedirect(request, "complereOrder.html")
+    return render(request, "completeOrder.html")
 
 
 def completeOrder(request):
@@ -235,10 +286,18 @@ def completeOrder(request):
 
     except:
         history = History()
-    
+
     #cart.save()
+    #db persistance dql actions
     history.save()
-    cart.save()
     history.orders.add(cart)
+    history.save()
     
+    # new cart associated to user
+    cart = Cart()
+    cart.save()
+    cart.cartOwner = request.user
+    cart.save()
+
+    return HttpResponse("Your order is complete")
     return render(request, 'completeOrder.html')
