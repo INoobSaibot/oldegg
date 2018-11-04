@@ -33,13 +33,17 @@ def index(request):
         print(username)
         id =(request.user.id)
         cart = Cart.objects.filter(cartOwner=request.user, status = 'b')[0]
+        
+        if cart_is_empty(cart):
+            cart=False
+            
         '''
         for shoppingCart in carts:
             cart = shoppingCart
             cart.save()
             break'''
 
-        #print('users browsing carts query length: '+ str(len(cart.productList)))
+        #print('users browsing carts query length: '+ str(len(cart.productList.all())))
 
         
 
@@ -77,9 +81,10 @@ def flattenCarts(qs):
                     print("item: " + str(product))
 
 #super ugly hacky code barf
-def is_cartEmpty(c):
-    print("number of items on the cart: " + str(len(c.productList.all()))) #holy wowzas, will refactor
-    print(c.status)
+def cart_is_empty(c):
+    print('users browsing carts query length: '+ str(len(c.productList.all())))
+
+    
     return len(c.productList.all()) == False
 
 
