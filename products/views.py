@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 
 
 from products.models import Product, Brand, ProductInstance, Category
-from products.models import PaymentCard, Wallette, OrderHistory
+from products.models import PaymentCard, Wallette, History
 
 def index(request):
     """View function for home page of site."""
@@ -229,11 +229,16 @@ def completeOrder(request):
     user = request.user
     cart = Cart.objects.get(cartOwner=user)
     cart.status = 'p'
-    orderHistory = Cart.objects.get(cartOwner=user, status='p')
-    
     cart.save()
+    try:
+        history = History.objects.get(owner=user)
 
-
-    orderHistory.add(cart)
+    except:
+        history = History()
+    
+    #cart.save()
+    history.save()
+    cart.save()
+    history.orders.add(cart)
     
     return render(request, 'completeOrder.html')

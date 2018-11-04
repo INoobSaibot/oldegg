@@ -206,8 +206,13 @@ class Wallette(models.Model):
 
 
 
-class OrderHistory(models.Model):
+class History(models.Model):
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4,
+     help_text='Unique ID for this particular product across whole system')
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    add = models.ManyToManyField(Cart)
-    pass
+    orders = models.ManyToManyField(Cart)
+
+    
+    
     
