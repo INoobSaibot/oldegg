@@ -1,1 +1,66 @@
 {% extends "base_generic.html" %}
+
+{% block content %}
+    <h1>You're almost done</h1>
+    {% if payment_list %}
+        <form action="order" method="post">
+
+        {% csrf_token %}
+        {% for payment in payment_list %}
+            <li>card {{payment.name}}<button>Use a different payment</button></li>
+        {% endfor %}
+        </form>
+    {% else %}
+    <div class="payment">
+        <form action="order" method=post>
+        {% csrf_token %}
+            <div class="form-group card_holder">
+                <label for="card_holder">Card Holder</label>
+                <input type="text" class="form-control" id="card_holder">
+            </div>
+            
+            <div class="form-group CVV">
+                <label for="cvv">CVV</label>
+                <input type="text" class="form-control" id="cvv">
+            </div>
+            
+            <div class="form-group" id="card-number-field">
+                <label for="cardNumber">Card Number</label>
+                <input type="text" class="form-control" id="cardNumber">
+            </div>
+
+            <div class="form-group" id="expiration-date">
+                <label>Expiration Date</label>
+                <select>
+                    <Option value="01">January</Option>
+                    <Option value="01">January</Option>
+                    <Option value="01">January</Option>
+                    <Option value="01">January</Option>
+                    <Option value="01">January</Option>
+                    <Option value="01">January</Option>
+                    <Option value="01">January</Option>
+                    <Option value="01">January</Option>
+                    <Option value="01">January</Option>
+                    <Option value="01">January</Option>
+                    <Option value="01">January</Option>
+                    <Option value="12">December</Option>
+                </select>
+            
+                <select>
+                    <option value="18">2018</option>
+                    <option value="19">2019</option>
+                    <option value="20">2020</option>
+                    <option value="21">2021</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="pay-now">
+                <button type="submit" class=btn btn-default id="confirm-purchase">Confirm</button>
+            </div>
+
+        </form>
+
+
+    </div>
+    {% endif %}
+{% endblock %}

@@ -154,9 +154,15 @@ def removeFromCart(request, ):
 
 def placeOrder(request,):
     """ """
-    user = request.user
-    context = {
 
+    user = request.user
+    #faked out payments list from db, fix this once models are in and available
+    payment_list = [user.pk,]
+    if len(payment_list) < 2:
+        payment_list = False
+    context = {
+        'user': user,
+        'payment_list': payment_list,
     }
 
     return render(request, 'completeOrder.html', context=context)
