@@ -154,15 +154,42 @@ def removeFromCart(request, ):
 
 def placeOrder(request,):
     """ """
+    # pull post stuff out into variables
+    posted = request.POST
+
+    card_holder = posted['card_holder']
+    cvv = posted['cvv']
+    card_number = posted['cardNumber']
+    expiration_date = posted['exp_month'] + "/" + posted['exp_year']
+    
+    def printPost():
+        print(posted.keys())
+        print(card_holder)
+        print (cvv)
+        print(card_number)
+        print(expiration_date)
+
+    print(expiration_date)
 
     user = request.user
     #faked out payments list from db, fix this once models are in and available
+    
+    ERRORS = []
     payment_list = [user.pk,]
     if len(payment_list) < 2:
         payment_list = False
     context = {
         'user': user,
         'payment_list': payment_list,
+        'ERRORS': ERRORS,
     }
 
     return render(request, 'completeOrder.html', context=context)
+
+
+def addPayment(request,):
+    """ """
+    pmt = {}
+    
+    user = request.user
+    user.payments.add(pmt)

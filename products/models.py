@@ -168,4 +168,23 @@ class Cart(models.Model):
     def __str__(self):
         """String for representing the Model object."""
         return f'{self.id} ({self.productList})'
+
+
+
+class PaymentCard(models.Model):
+    """Model representing a users payment card """
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text='Unique ID for this particular product across whole system')
+    cardNumber = models.CharField('CardNumber', max_length=16,help_text='Enter a fake card number')
+    cvv = models.CharField("cvv", max_length=4, help_text="max length = 4")
+    
+    name = models.CharField("Card Name: ", max_length=32,
+    help_text="Enter a name for this payment, up to 32 characters!",
+    null=True, blank=True)
+
+    cardHolder = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)    
+    
+    def __str__(self):
+        """String for repsenting the Model object."""
+        return f'{self.name} for: {self.cardHolder}'
     
