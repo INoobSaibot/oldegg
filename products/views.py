@@ -144,6 +144,10 @@ def addToCart(request, ):
 
 def removeFromCart(request, ):
     """ Quick and dirt remove from cart method"""
+
+    # fix at some point to cart = users.getCart()
+    #  and make that method in User... or .....
+    # or even maybe cart= Cart.getThisUsersCart(user)
     cart = Cart.objects.filter(cartOwner=request.user, status='b')[0]
     #print('posted:' + request.POST['choice'] + '<---------------------')
     #print(Product.objects.get(itemNumber=request.POST['choice']))
