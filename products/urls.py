@@ -12,4 +12,5 @@ urlpatterns = [
     path('completeOrder', views.completeOrder, name="completeOrder"),
     path('addPaymentCard', views.addPaymentCard, name="addPaymentCard"),
     path("cardForm", views.cardForm, name="cardForm"),
+    path("addressForm", views.addAddress, name="addressForm"),
 ]

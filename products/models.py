@@ -220,6 +220,25 @@ class History(models.Model):
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     orders = models.ManyToManyField(Cart)
 
+
+class ShippingAddress(models.Model):
+    """Model representing a users payment card """
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text='Unique ID for this particular product across whole system')
+    address = models.CharField('Street name and Number', max_length=25,help_text='Enter an address')
+    city = models.CharField("City", max_length=25, help_text="max length = 25")
+    state = models.CharField("State", max_length=2 ,help_text = "Enter a state abbreviation")
+    zip = models.CharField("Zip Code", max_length=15)
+    name = models.CharField("Address Name: ", max_length=32,
+    help_text="Enter a name for this address such as Home, up to 32 characters!",
+    null=True, blank=True)
+
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    
+    def __str__(self):
+        """String for repsenting the Model object."""
+        return f'{self.name} for: {self.address}'
+
     
     
     

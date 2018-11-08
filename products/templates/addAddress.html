@@ -1,50 +1,25 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-    <h1>You're almost done</h1>
-    <h1>Shipping to: {{shippingAddress}}</h1>    
-    <h2>Choose your payment</h2>
+    <h1>Add Address</h1>
     {% if payment_list %}
-        <form action="completeOrder" method="post">
+        <form action="order" method="post">
 
         {% csrf_token %}
-        <div class="form-group" id="Which of your cards" name="Which of your cards">
-                <label>Pick Your Card</label>
-                <select name="Card Choice Field">
-        {% for payment in payment_list %}
-                    <option value="{{payment.id}}">Ends in: {{ payment.last4 }} -- 
-                        Exp: {{ payment.exp }} {{ payment.type }}</option>
-
-            <!--<li>card {{payment.name}} -- {{payment.last4}}<button name="{{payment.id}}" value={{payment.id}}>Use this payment Card</button></li><br>-->
-        {% endfor %}
-                </select>
-                <button>Charge it ship it</button>
-        </div>
-    {% endif %}
-        <button type="submit" formaction="cardForm">Use different card</button><br>
-        <button type="submit" formaction="addressForm">Add Address</button>    
-    </form>
-
-
-<!--
-<button type="submit">Submit</button><br>
-  <button type="submit" formaction="/action_page2.php">Submit to another page</button>
-
--->
-     
         
-    <!--<input type="submit" name="addCard" value="Add New Card">-->
-    <!--
+        <input type="submit" name="addCard" value="Different Card">
+        </form>
+    {% else %}
     <div class="payment">
         <form action="order" method=post>
         {% csrf_token %}
-            <div class="form-group card_holder">
-                <label for="card_holder">Card Holder</label>
+            <div class="form-group address_holder">
+                <label for="address_holder">Name of address</label>
                 <input type="text" class="form-control" name="card_holder">
             </div>
             
-            <div class="form-group CVV">
-                <label for="cvv">CVV</label>
+            <div class="form-group streetNameNumber">
+                <label for="streetNameNumber">Street Name and Number</label>
                 <input type="text" class="form-control" id="cvv" name="cvv">
             </div>
             
@@ -79,6 +54,16 @@
             </div>
 
             <div class="form-group" id="pay-now">
+
+            <div class="form-group" id="cardType" name="cardType">
+                <label>Pick Your Card Type</label>
+                <select name="Card Type Field">
+                        <Option value="01">Visa</Option>
+                        <Option value="02">Master Card</Option>
+                        <Option value="03">American Express</Option>
+                </select>
+            </div>
+
                 <button type="submit" class=btn btn-default id="confirm-purchase">Confirm</button>
             </div>
 
@@ -86,5 +71,5 @@
 
 
     </div>
--->
+    {% endif %}
 {% endblock %}

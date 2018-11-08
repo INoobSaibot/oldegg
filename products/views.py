@@ -1,11 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from products.models import Cart
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.utils import timezone
 
 from products.models import Product, Brand, ProductInstance, Category
-from products.models import PaymentCard, Wallette, History
+from products.models import PaymentCard, Wallette, History, ShippingAddress
+from django.contrib.auth.forms import UserCreationForm
+
 # create your views here!
 
 
@@ -58,8 +60,6 @@ def index(request):
     return render(request, 'index.html', context=context)
 
 
-
-
 def flattenCarts(qs):    
         for cart in carts:
             print(cart.id)
@@ -76,22 +76,10 @@ def cart_is_empty(c):
     return len(c.productList.all()) == False
 
 
-
-
-
-
-
-
-
-
 from django.views import generic
 
 class StoreListView(generic.ListView):
     model = Product
-
-
-
-
 
 
 class ProductDetailView(generic.DetailView):
@@ -100,11 +88,6 @@ class ProductDetailView(generic.DetailView):
 class CartListView(generic.ListView):
     model = Product
 
-
-
-
-
-from django.http import HttpResponse
 
 def addToCart(request, ):
     # some of this is all hard coded just to test will fix
@@ -135,7 +118,10 @@ def addToCart(request, ):
         # these next to lines ensure user is sent back
         # to that same items page upon a successful log in
         sendWhereAfterLogin = '/products/product/' + str(product.id)
-        context = {'next': sendWhereAfterLogin}
+        form = True
+        context = {'next': sendWhereAfterLogin,
+                    'form': form,}
+        return redirect('login')
         return render(request, "registration/login.html",context = context)
         
     
@@ -159,15 +145,7 @@ def removeFromCart(request, ):
 
 
 def placeOrder(request,):
-    """
-    #super ugly hacky code barf
-    def cartEmpty(c):
-        print(len(c.productList.all()))
-        return len(c.productList.all()) == False
-    
-    if cartEmpty(cart):
-        cart = False
-     """
+    """ """
     # pull post stuff out into variables
     posted = request.POST
     user = request.user
@@ -175,13 +153,16 @@ def placeOrder(request,):
 
     # eeew
     def is_walletteEmpty(w):
-        """ public Bool Returns True or False 
+        """ public int evaluates as Bool Returns True or False 
             Returns True if users walete collection of payment types 
             has one or more payment card, returns False if users wallette has zero
             or less payment card in the collection"""
-        print(len(w.paymentList.all()))
         return len(w.paymentList.all())
     
+    # get address
+    shippingAddress = ShippingAddress.objects.get(owner=request.user)
+        
+
     try:
         w = Wallette.objects.get(owner=request.user)
         w.save()
@@ -215,11 +196,13 @@ def placeOrder(request,):
     if posted.get('addCard') == "Different Card":
         print("addcard")
         print(hasCard)
-
+    
+    
     context = {
         'user': user,
         'payment_list': payment_list,
         'ERRORS': ERRORS,
+        'shippingAddress': shippingAddress,
     }
     print('whoah')
     #print(p.exp)
@@ -237,13 +220,7 @@ def addPaymentCard(request,):
     posted = request.POST
     user = request.user
     #user.payments.add(pmt)
-    '''
-    card_holder = posted['card_holder']
-    cvv = posted['cvv']
-    card_number = posted['cardNumber']
-    expiration_date = posted['exp_month'] + "/" + posted['exp_year']
-    '''
-    
+        
     try:
         w = Wallette.objects.get(owner=request.user)
         w.save()
@@ -307,3 +284,16 @@ def completeOrder(request):
 
     #return HttpResponse("Your order is complete")
     return render(request, 'OrderAccepted.html')
+
+
+def addAddress(request,):
+    
+    # pull post stuff out into variables
+    posted = request.POST
+    user = request.user
+    try:
+        streetNameAndNumber = posted['streetNameAddress']
+    except:
+        print("post fail in add address")
+    
+    return render(request, "addPaymentCard.html")
