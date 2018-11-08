@@ -26,7 +26,7 @@
     </li>
 {% endfor %}
 </ul>
-  </form>
+  </form>Total: ${{cart.getTotal}}
 
 <form action="/products/order" method="post">
   {% csrf_token %}

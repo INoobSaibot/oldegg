@@ -13,17 +13,19 @@ class CartItem(models.Model):
     quantity = models.IntegerField(default=1)
 
     order_id = models.ForeignKey('TestCart', on_delete=models.SET_NULL, null=True)
+    
+    def getPrice(self):
+        return self.m.price
+    
+    def getLineTotal(self):
+        return self.m.price * self.quantity
+    
     def __str__(self):
         """String for representing the Model object."""
         return f'{self.m} x  [{self.quantity}]  For: {self.order_id}'
 
-
-
-
-
-
-
-
+    
+    
 
 
 class TestCart(models.Model):
@@ -33,6 +35,7 @@ class TestCart(models.Model):
     itemsInCart = models.ManyToManyField(CartItem)
     cartOwner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     total = f'0.00'
+
     #productLine = models.CharField(max_length=200)
     #theStuff = models.ManyToManyFi(otherCart, on_delete=models.SET_NULL, null=True)
     #product = models.ForeignKey('Product', on_delete=models.SET_NULL, null=True) 
@@ -60,9 +63,17 @@ class TestCart(models.Model):
     class Meta:
         ordering = ['next_ship']
 
+    def getTotal(self):
+        """ get total for cart or order """
+        total = 0
+        for eachProduct in self.itemsInCart.all():
+            total += eachProduct.getLineTotal()
+        #return total
+        return '${:,.2f}'.format(total)
+
     def __str__(self):
         """String for representing the Model object."""
-        return f'{self.cartOwner}\'s Cart/Order id#  {self.id} total: {self.total}'
+        return f'{self.cartOwner}\'s Cart/Order id#  {self.id} total: {self.getTotal()}'
 
 
 

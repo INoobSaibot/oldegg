@@ -35,6 +35,10 @@ class Product(models.Model):
     # Category class has already been defined so we can specify the object above.
     category = models.ManyToManyField(Category, help_text='Select a category for this product')
 
+    #still needs some work, defualt, required, null etc. just added to get
+    #shopping cart working
+    price = models.FloatField("Price")
+
     def __str__(self):
         """String for representing the Model object."""
         return self.name
@@ -43,14 +47,7 @@ class Product(models.Model):
         """Returns the url to access a detail record for this product."""
         return reverse('product-detail', args=[str(self.id)])
 
-
-
-
-
     
-    #still needs some work, defualt, required, null etc. just added to get
-    #shopping cart working
-    price = models.FloatField("Price")
 
 
 
@@ -166,6 +163,13 @@ class Cart(models.Model):
 
     class Meta:
         ordering = ['next_ship']
+    
+    def getTotal(self):
+        """ get total for cart or order """
+        total = 0
+        for eachProduct in self.productList.all():
+            total += eachProduct.price
+        return total
 
     def __str__(self):
         """String for representing the Model object."""
@@ -194,6 +198,7 @@ class PaymentCard(models.Model):
     def last4(self):
         """Method to return last 4 to identify saved cards in checkout """
         return f'ending in: {self.cardNumber[-4:]}'
+
 
 class Wallette(models.Model):
     """it holds payment cards """

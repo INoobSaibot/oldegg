@@ -7,9 +7,18 @@
         <form action="completeOrder" method="post">
 
         {% csrf_token %}
+        <div class="form-group" id="Which of your cards" name="Which of your cards">
+                <label>Pick Your Card</label>
+                <select name="Card Choice Field">
         {% for payment in payment_list %}
-            <li>card {{payment.name}} -- {{payment.last4}}<button name="{{payment.id}}" value={{payment.id}}>Use this payment Card</button></li><br>
+                    <option value="{{payment.id}}">Ends in: {{ payment.last4 }} -- 
+                        Exp: {{ payment.exp }} {{ payment.type }}</option>
+
+            <!--<li>card {{payment.name}} -- {{payment.last4}}<button name="{{payment.id}}" value={{payment.id}}>Use this payment Card</button></li><br>-->
         {% endfor %}
+                </select>
+                <button>Charge it ship it</button>
+        </div>
     {% endif %}
         <button type="submit" formaction="cardForm">Use different card</button><br>
         </form>

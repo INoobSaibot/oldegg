@@ -112,7 +112,6 @@ def addToCart(request, ):
     # why many carts you ask? IM GLAD YOU ASKED!!!
         ##CARTS can immediatly be converted to orders, via, status atribute
         ### Example, browsing, ORder, other stuff...
-   
     user = None
     username = None
     product = Product.objects.get(itemNumber=request.POST['choice'])
@@ -133,13 +132,15 @@ def addToCart(request, ):
             cart.cartOwner = request.user
             cart.save()
     else:
-        cart = Cart()
-        cart.save()
+        # these next to lines ensure user is sent back
+        # to that same items page upon a successful log in
+        sendWhereAfterLogin = '/products/product/' + str(product.id)
+        context = {'next': sendWhereAfterLogin}
+        return render(request, "registration/login.html",context = context)
         
     
     
     return HttpResponseRedirect('product/'+ str(product.pk))
-    #return render("Youre post was accepted!!!!<br><br>" + request.POST['choice'])
 
 
 def removeFromCart(request, ):
