@@ -286,14 +286,33 @@ def completeOrder(request):
     return render(request, 'OrderAccepted.html')
 
 
-def addAddress(request,):
-    
-    # pull post stuff out into variables
-    posted = request.POST
-    user = request.user
+def addressForm(request,):
+    print(request.method)
+    if request.method == "POST": #If the form has been submitted...
+        # pull post stuff out into variables
+        posted = request.POST
+        user = request.user
+
     try:
         streetNameAndNumber = posted['streetNameAddress']
     except:
         print("post fail in add address")
-    
-    return render(request, "addPaymentCard.html")
+        print(posted)
+    return render(request, "addAddress.html")
+
+def addAddress(request,):
+    user = request.user
+    if request.method == "POST":
+        posted = request.POST
+        
+        address_name = posted['address_name']
+        streetNameAndNumber = posted['streetNameAndNumber']
+        theCity = posted['theCity']
+        state = posted['state']
+        print(posted)
+        
+        return HttpResponse(address_name + " " +
+         " " + streetNameAndNumber + " " + theCity +
+           " " + state)
+    else:
+        return HttpResponse("addAddress")

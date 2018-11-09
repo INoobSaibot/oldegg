@@ -2,74 +2,52 @@
 
 {% block content %}
     <h1>Add Address</h1>
-    {% if payment_list %}
-        <form action="order" method="post">
+
+       
 
         {% csrf_token %}
         
-        <input type="submit" name="addCard" value="Different Card">
-        </form>
-    {% else %}
-    <div class="payment">
-        <form action="order" method=post>
+        
+    <div class="address">
+        <form action="addAddress" method=post>
         {% csrf_token %}
             <div class="form-group address_holder">
                 <label for="address_holder">Name of address</label>
-                <input type="text" class="form-control" name="card_holder">
+                <input type="text" class="form-control" name="address_name">
             </div>
             
             <div class="form-group streetNameNumber">
                 <label for="streetNameNumber">Street Name and Number</label>
-                <input type="text" class="form-control" id="cvv" name="cvv">
+                <input type="text" class="form-control" id="streetNameAndNumber" name="streetNameAndNumber">
             </div>
             
             <div class="form-group" id="card-number-field">
-                <label for="cardNumber">Card Number</label>
-                <input type="text" class="form-control" id="cardNumber" name="cardNumber">
+                <label for="City">City</label>
+                <input type="text" class="form-control" id="city" name="theCity">
             </div>
 
-            <div class="form-group" id="expiration-date" name="expiration_date">
-                <label>Expiration Date</label>
-                <select name="exp_month">
-                    <Option value="01">January</Option>
-                    <Option value="01">January</Option>
-                    <Option value="01">January</Option>
-                    <Option value="01">January</Option>
-                    <Option value="01">January</Option>
-                    <Option value="01">January</Option>
-                    <Option value="01">January</Option>
-                    <Option value="01">January</Option>
-                    <Option value="01">January</Option>
-                    <Option value="01">January</Option>
-                    <Option value="01">January</Option>
-                    <Option value="12">December</Option>
-                </select>
-            
-                <select name="exp_year">
-                    <option value="18">2018</option>
-                    <option value="19">2019</option>
-                    <option value="20">2020</option>
-                    <option value="21">2021</option>
+            <div class="form-group" id="state" name="state">
+                <label>State</label>
+                <select name="state">
+                    <Option value="01">Ohio</Option>
+                    <Option value="01">Virgina</Option>
+                    <option value="ca">California</option>
                 </select>
             </div>
 
-            <div class="form-group" id="pay-now">
+            <div class="form-group" id="add-now">
 
             <div class="form-group" id="cardType" name="cardType">
                 <label>Pick Your Card Type</label>
-                <select name="Card Type Field">
-                        <Option value="01">Visa</Option>
-                        <Option value="02">Master Card</Option>
-                        <Option value="03">American Express</Option>
-                </select>
+                
             </div>
 
-                <button type="submit" class=btn btn-default id="confirm-purchase">Confirm</button>
+                <button type="submit" class=btn btn-default id="confirm-address">Confirm</button>
             </div>
 
         </form>
 
 
     </div>
-    {% endif %}
+
 {% endblock %}
