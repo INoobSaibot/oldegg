@@ -49,12 +49,6 @@ class Product(models.Model):
 
     
 
-
-
-
-
-
-
 import uuid # Required for unique product instances
 
 class ProductInstance(models.Model):
@@ -87,14 +81,6 @@ class ProductInstance(models.Model):
         return f'{self.id} ({self.product.name})'
 
 
-
-
-
-
-
-
-
-
 class Brand(models.Model):
     """Model representing a Brand."""
     brand_name = models.CharField(max_length=100)
@@ -114,23 +100,7 @@ class Brand(models.Model):
         return f'{self.manufacturer_name}, {self.brand_name}'
 
 
-
-
-
-
-
-
-
-
-
-
-
 import uuid # Required for unique cart instances 
-
-
-
-
-
 
 class Cart(models.Model):
     """Model representing a specific instance of a cart (i.e. that can be tracked in warehouse)."""

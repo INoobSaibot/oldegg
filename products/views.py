@@ -121,7 +121,7 @@ def addToCart(request, ):
         form = True
         context = {'next': sendWhereAfterLogin,
                     'form': form,}
-        return redirect('login')
+        #return redirect('login')
         return render(request, "registration/login.html",context = context)
         
     
