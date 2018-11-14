@@ -6,6 +6,7 @@ from django.utils import timezone
 
 from products.models import Product, Brand, ProductInstance, Category
 from products.models import PaymentCard, Wallette, History, ShippingAddress
+from cart.models import TestCart
 from django.contrib.auth.forms import UserCreationForm
 
 # create your views here!
@@ -42,6 +43,11 @@ def index(request):
         if cart:
             if cart_is_empty(cart):
                 cart=False
+        
+        #testCart
+        user = request.user
+        testCart = TestCart.objects.filter(cartOwner=user, status='b')[0]
+        print(testCart)
 
     # number of visis to this view, as counted in he session variable
     num_visits = request.session.get('num_visits', 0)
@@ -55,6 +61,7 @@ def index(request):
         'num_categories': num_categories,
         'num_visits': num_visits,
         'cart': cart,
+        'testCart': testCart,
     }
     # Render the html template index.html with data in the context variable
     return render(request, 'index.html', context=context)
