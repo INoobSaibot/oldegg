@@ -19,7 +19,17 @@ class CartItem(models.Model):
     
     def getLineTotal(self):
         return self.m.price * self.quantity
+
+    def increaseQuantity(self):
+        self.quantity += 1
+        self.save()
     
+    def decreaseQuantity(self):
+        self.quantity -=1
+        if self.quantity < 1:
+            self.quantity = 1
+        self.save()
+
     def __str__(self):
         """String for representing the Model object."""
         return f'{self.m} x  [{self.quantity}]  For: {self.order_id}'

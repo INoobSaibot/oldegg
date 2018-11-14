@@ -40,22 +40,30 @@
 <!--Test Cart!!! that allows quantities and repeats-->
 <br><br>
 <h1>Your Test Cart Contents:</h1>
-{% if testCart %}
-<form action = "" method="post">
+{% if testCart.itemsInCart %}
+<form action = "/products/removeFromTestCart" method="post">
   {% csrf_token %}
   <ul>
     {% for cartItem in testCart.itemsInCart.all %}
-      <li>{{cartItem.m}} -- ${{cartItem.getPrice}} -- {{cartItem.quantity}}
-            -- {{cartItem.getLineTotal}}
-            <input type="radio" name="" id="{{forloop.counter}}" value="">
+      <li><button type="submit" name="pk" id="{{forloop.counter}}" value={{cartItem.pk}}>X</button>
+        {{cartItem.m}} -- <button type="submit" name="increase" value={{cartItem.pk}}>
+           + </button> {{cartItem.quantity}} <button type="submit" name="decrease" value="{{cartItem.pk}}"> - </button>
+        -- ${{cartItem.getPrice}} -- {{cartItem.getLineTotal}}
+            
       </li>
       {% endfor %}
   </ul>
-</form>TestCart Total: ${{testCart.getTotal}}
+</form>TestCart Total: {{testCart.getTotal}}
+
+<form action="/products/order" method="post">
+  {% csrf_token %}
+<input type="submit" name="order" id="order" value="order">
+</form>
 
 {% else %}
   <p>{{request.user}}'s Test Cart seems to be empty or missing!</p>
 {% endif %}
+<br><br><br>
 
 
 

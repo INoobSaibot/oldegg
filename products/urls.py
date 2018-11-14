@@ -14,4 +14,6 @@ urlpatterns = [
     path("cardForm", views.cardForm, name="cardForm"),
     path("addressForm", views.addressForm, name="addressForm"),
     path("addAddress",views.addAddress, name="addAddress"),
+    path('removeFromTestCart', views.removeFromTestCart, name="removeFromTestCart"),
+    
 ]

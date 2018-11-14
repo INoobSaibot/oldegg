@@ -6,7 +6,7 @@ from django.utils import timezone
 
 from products.models import Product, Brand, ProductInstance, Category
 from products.models import PaymentCard, Wallette, History, ShippingAddress
-from cart.models import TestCart
+from cart.models import TestCart, CartItem
 from django.contrib.auth.forms import UserCreationForm
 
 # create your views here!
@@ -48,6 +48,8 @@ def index(request):
         user = request.user
         testCart = TestCart.objects.filter(cartOwner=user, status='b')[0]
         print(testCart)
+        if testCart.itemsInCart.count() < 1:
+            testCart = False
 
     # number of visis to this view, as counted in he session variable
     num_visits = request.session.get('num_visits', 0)
@@ -135,10 +137,47 @@ def addToCart(request, ):
     
     return HttpResponseRedirect('product/'+ str(product.pk))
 
+def removeFromTestCart(request,):
+    """event handle to remove line item from TestCart """
+    user = request.user
+    posted = request.POST
+    #removeFromCart(request,)
+    for k,v in request.POST.items(): print (k, '>', v)
+    removeItem = posted.get('pk')
+    increaseQuantity = posted.get('increase')
+    decreaseQuantity = posted.get('decrease')
+
+
+    if removeItem:
+        cart = TestCart.objects.filter(cartOwner=user, status='b')[0]
+        pk = request.POST['pk']
+        print(request.POST)
+        cartItem = CartItem.objects.get(pk=pk)
+
+        cart.itemsInCart.remove(cartItem)
+
+    elif increaseQuantity:
+        print(increaseQuantity)
+        pk = increaseQuantity
+        cartItem = CartItem.objects.get(pk=pk)
+        cartItem.increaseQuantity()
+
+    elif decreaseQuantity:
+        pk = decreaseQuantity
+        cartItem = CartItem.objects.get(pk=pk)
+        cartItem.decreaseQuantity()
+
+
+
+
+    return HttpResponseRedirect("")
+
+
+
+
 
 def removeFromCart(request, ):
     """ Quick and dirt remove from cart method"""
-
     # fix at some point to cart = users.getCart()
     #  and make that method in User... or .....
     # or even maybe cart= Cart.getThisUsersCart(user)
