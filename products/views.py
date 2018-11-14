@@ -245,7 +245,7 @@ def placeOrder(request,):
     return render(request, 'completeOrder.html', context=context)
 
 def cardForm(request,):
-    return render(request, "XaddPaymentCard.html")
+    return render(request, "addPaymentCard.html")
 
 
 
