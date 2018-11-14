@@ -18,6 +18,14 @@
             <!--<li>card {{payment.name}} -- {{payment.last4}}<button name="{{payment.id}}" value={{payment.id}}>Use this payment Card</button></li><br>-->
         {% endfor %}
                 </select>
+                
+                <label>Pick your shipping address</label>
+                <select name="Address List">                    
+        {% for address in addressList %}
+                    <option value="{{address.id}}">{{address.name}} -- {{address.address}}</option>
+
+        {% endfor %}
+                </select>
                 <button>Charge it ship it</button>
         </div>
     {% endif %}

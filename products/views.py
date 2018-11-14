@@ -150,6 +150,7 @@ def placeOrder(request,):
     posted = request.POST
     user = request.user
     ERRORS = []
+    print('place order')
 
     # eeew
     def is_walletteEmpty(w):
@@ -159,43 +160,76 @@ def placeOrder(request,):
             or less payment card in the collection"""
         return len(w.paymentList.all())
     
-    # get address
-    shippingAddress = ShippingAddress.objects.get(owner=request.user)
-        
+    # get address's
+    addressList = ShippingAddress.objects.filter(owner=request.user)
+    print(addressList.count())
+    if addressList.count() < 1:
+        return render(request, 'addAddress.html')
 
     try:
-        w = Wallette.objects.get(owner=request.user)
-        w.save()
-    except:
-        w = Wallette()
-        w.owner = user
-        w.save()
-        return render(request, 'addCard.html', context=context)
+        shippingAddress = ShippingAddress.objects.filter(owner=request.user)[0]
+    except Exception as e:
+        print('ship addy xcept')
+        print(e)
+        return render(request, 'addAddress.html')
+
+    addressList = ShippingAddress.objects.filter(owner=request.user)
+
+    # get payment types done more like address's
+    payment_list = PaymentCard.objects.filter(owner=request.user)
+    print(payment_list)
+    if payment_list.count() < 1:
+        print("render payment bleh")
+        return render(request, 'addPaymentCard.html')
+    
+    try:
+        payment = PaymentCard.objects.filter(owner=request.user)
+    except Exception as e:
+        print('payment cards except')
+        print(e)
+        return render(request, 'addPaymentCard.html')
+    
+
+
+
+    #old funky stuff will delete
+    def funkyCrud():
+        try:
+            w = Wallette.objects.get(owner=request.user)
+            w.save()
+        except:
+            '''
+            w = Wallette()
+            w.owner = user
+            w.save()'''
+            return render(request, 'addPaymentCard.html')
+            
     
     #user.payments.add(pmt)
-    try:
-        card_holder = posted['card_holder']
-        cvv = posted['cvv']
-        card_number = posted['cardNumber']
-        expiration_date = posted['exp_month'] + "/" + posted['exp_year']
+    def paymentsCrud():
+        try:
+            card_holder = posted['card_holder']
+            cvv = posted['cvv']
+            card_number = posted['cardNumber']
+            expiration_date = posted['exp_month'] + "/" + posted['exp_year']
+            
+
+            p = PaymentCard()
+            p.cardHolder = card_holder
+            p.cvv = cvv
+            p.cardNumber = card_number
+            p.exp = expiration_date
+            p.save()
+            w.paymentList.add(p)
+        except:
+            pass
         
+        payment_list = w.paymentList.all()
+        hasCard = (len(payment_list)) > 0
 
-        p = PaymentCard()
-        p.cardHolder = card_holder
-        p.cvv = cvv
-        p.cardNumber = card_number
-        p.exp = expiration_date
-        p.save()
-        w.paymentList.add(p)
-    except:
-        pass
-    
-    payment_list = w.paymentList.all()
-    hasCard = (len(payment_list)) > 0
-
-    if posted.get('addCard') == "Different Card":
-        print("addcard")
-        print(hasCard)
+        if posted.get('addCard') == "Different Card":
+            print("addcard")
+            print(hasCard)
     
     
     context = {
@@ -203,6 +237,7 @@ def placeOrder(request,):
         'payment_list': payment_list,
         'ERRORS': ERRORS,
         'shippingAddress': shippingAddress,
+        'addressList': addressList,
     }
     print('whoah')
     #print(p.exp)
@@ -210,55 +245,60 @@ def placeOrder(request,):
     return render(request, 'completeOrder.html', context=context)
 
 def cardForm(request,):
-    return render(request, "addPaymentCard.html")
+    return render(request, "XaddPaymentCard.html")
 
 
 
 def addPaymentCard(request,):
     """ """
+    print("addPaymentCard")
     # pull post stuff out into variables
     posted = request.POST
     user = request.user
     #user.payments.add(pmt)
+    def lame():    
+        try:
+            w = Wallette.objects.get(owner=request.user)
+            w.save()
+        except:
+            w = Wallette()
+            w.owner = user
+            w.save()
+    if request.method == "POST":
+        card_holder = posted['card_holder']
+        cvv = posted['cvv']
+        card_number = posted['cardNumber']
+        expiration_date = posted['exp_month'] + "/" + posted['exp_year']
         
-    try:
-        w = Wallette.objects.get(owner=request.user)
-        w.save()
-    except:
-        w = Wallette()
-        w.owner = user
-        w.save()
-
-    card_holder = posted['card_holder']
-    cvv = posted['cvv']
-    card_number = posted['cardNumber']
-    expiration_date = posted['exp_month'] + "/" + posted['exp_year']
+        p = PaymentCard()
+        p.owner = user
+        p.cardHolder = card_holder
+        p.cvv = cvv
+        p.cardNumber = card_number
+        p.exp = expiration_date
+        p.save()
     
+    addressList = ShippingAddress.objects.filter(owner=request.user)
 
-    p = PaymentCard()
-    p.cardHolder = card_holder
-    p.cvv = cvv
-    p.cardNumber = card_number
-    p.exp = expiration_date
-    p.save()
-    w.paymentList.add(p)
-    w.save()
+    payment_list = PaymentCard.objects.filter(owner=request.user)
+
+    shippingAddress = ShippingAddress.objects.filter(owner=request.user)[0]
     
+    ERRORS = None
+    
+    context = {
+        'user': user,
+        'payment_list': payment_list,
+        'ERRORS': ERRORS,
+        'shippingAddress': shippingAddress,
+        'addressList': addressList,
+    }
+
+    #return HttpResponseRedirect(request, "completeOrder.html")
+    return render(request, "completeOrder.html", context = context)
 
 
-    def printPost():
-        print(posted.keys())
-        print(card_holder)
-        print (cvv)
-        print(card_number)
-        print(expiration_date)
-
-    print(expiration_date)
-    return HttpResponseRedirect(request, "complereOrder.html")
-    return render(request, "completeOrder.html")
-
-
-def completeOrder(request):
+def completeOrder(request,):
     user = request.user
     orders = Cart.objects.filter(cartOwner=user)
     cart = orders.filter(status='b')[0]
@@ -288,6 +328,7 @@ def completeOrder(request):
 
 def addressForm(request,):
     print(request.method)
+    print('address form')
     if request.method == "POST": #If the form has been submitted...
         # pull post stuff out into variables
         posted = request.POST
@@ -301,6 +342,7 @@ def addressForm(request,):
     return render(request, "addAddress.html")
 
 def addAddress(request,):
+    print('add address')
     user = request.user
     if request.method == "POST":
         posted = request.POST
@@ -311,6 +353,11 @@ def addAddress(request,):
         state = posted['state']
         print(posted)
         
+        
+        sh = ShippingAddress(owner=user, address=streetNameAndNumber, city=theCity, state=state)
+        sh.save()
+
+        return HttpResponseRedirect("order")
         return HttpResponse(address_name + " " +
          " " + streetNameAndNumber + " " + theCity +
            " " + state)

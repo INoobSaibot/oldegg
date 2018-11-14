@@ -160,7 +160,7 @@ class PaymentCard(models.Model):
 
     # probably change this, to not be user as card holder, instead get post info 
     cardHolder = models.CharField('CardHolder', max_length=64,help_text='Enter a CardHolder name')
-    
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     def __str__(self):
         """String for repsenting the Model object."""
         return f'{self.name} for: {self.cardHolder}'
@@ -207,8 +207,15 @@ class ShippingAddress(models.Model):
     
     def __str__(self):
         """String for repsenting the Model object."""
-        return f'{self.name} for: {self.address}'
+        return f'{self.owner}\'s {self.name} for: {self.address}'
 
-    
+'''
+class AddressBook(models.Model):
+    """ """
+    pass
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    addressList = models.ManyToManyField(ShippingAddress)
+
+    '''
     
     
