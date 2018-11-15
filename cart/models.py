@@ -88,7 +88,6 @@ class TestCart(models.Model):
 
     def putInCart(self, product):
         """puts in cart, buy first making it a cart item from cart item class """
-        print(product)
         user = self.cartOwner
         cartItem = CartItem(m=product,user_id=user)
         cartItem.save()

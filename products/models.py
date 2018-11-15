@@ -188,7 +188,8 @@ class History(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4,
      help_text='Unique ID for this particular product across whole system')
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    orders = models.ManyToManyField(Cart)
+    # many to many field has string based/ lazy reference to avoid circular import
+    orders = models.ManyToManyField("cart.TestCart")
 
 
 class ShippingAddress(models.Model):

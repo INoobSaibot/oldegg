@@ -1,4 +1,7 @@
 {% extends "base_generic.html" %}
 {% block content %}
-<h1>Thanks for your order</h1>
+<h1>Thanks for your order {{user}}</h1>
+<h2>Your order confirmation is {{order.id}}</h2>
+<br>
+<h2>Your card was charged {{order.getTotal}}</h2>
 {% endblock %}

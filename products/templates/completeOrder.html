@@ -26,7 +26,7 @@
 
         {% endfor %}
                 </select>
-                <button>Charge it ship it</button>
+                <button>Charge it ship it</button> {{order.getTotal}}
         </div>
     {% endif %}
         <button type="submit" formaction="cardForm">Use different card</button><br>

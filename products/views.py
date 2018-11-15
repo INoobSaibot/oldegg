@@ -149,8 +149,7 @@ def addToCart(request, ):
         #return redirect('login')
         return render(request, "registration/login.html",context = context)
         
-    
-    
+
     return HttpResponseRedirect('product/'+ str(product.pk))
 
 def removeFromTestCart(request,):
@@ -206,21 +205,13 @@ def removeFromCart(request, ):
     return (index(request,))
 
 
-def placeOrder(request,):
+def placeOrder(request, ):
     """ """
     # pull post stuff out into variables
     posted = request.POST
     user = request.user
     ERRORS = []
-    print('place order')
-
-    # eeew
-    def is_walletteEmpty(w):
-        """ public int evaluates as Bool Returns True or False 
-            Returns True if users walete collection of payment types 
-            has one or more payment card, returns False if users wallette has zero
-            or less payment card in the collection"""
-        return len(w.paymentList.all())
+    print('place orderssss')
     
     # get address's
     addressList = ShippingAddress.objects.filter(owner=request.user)
@@ -251,57 +242,19 @@ def placeOrder(request,):
         print(e)
         return render(request, 'addPaymentCard.html')
     
+    # test cart newwer cart stuff
+    orders = TestCart.objects.filter(cartOwner=user)
+    cart = orders.filter(status='b')[0]
+    order = cart
 
-
-
-    #old funky stuff will delete
-    def funkyCrud():
-        try:
-            w = Wallette.objects.get(owner=request.user)
-            w.save()
-        except:
-            '''
-            w = Wallette()
-            w.owner = user
-            w.save()'''
-            return render(request, 'addPaymentCard.html')
-            
-    
-    #user.payments.add(pmt)
-    def paymentsCrud():
-        try:
-            card_holder = posted['card_holder']
-            cvv = posted['cvv']
-            card_number = posted['cardNumber']
-            expiration_date = posted['exp_month'] + "/" + posted['exp_year']
-            
-
-            p = PaymentCard()
-            p.cardHolder = card_holder
-            p.cvv = cvv
-            p.cardNumber = card_number
-            p.exp = expiration_date
-            p.save()
-            w.paymentList.add(p)
-        except:
-            pass
-        
-        payment_list = w.paymentList.all()
-        hasCard = (len(payment_list)) > 0
-
-        if posted.get('addCard') == "Different Card":
-            print("addcard")
-            print(hasCard)
-    
-    
     context = {
         'user': user,
         'payment_list': payment_list,
         'ERRORS': ERRORS,
         'shippingAddress': shippingAddress,
         'addressList': addressList,
+        'order': order,
     }
-    print('whoah')
     #print(p.exp)
     #return HttpResponse("Your order is complete")
     return render(request, 'completeOrder.html', context=context)
@@ -364,6 +317,14 @@ def completeOrder(request,):
     user = request.user
     orders = Cart.objects.filter(cartOwner=user)
     cart = orders.filter(status='b')[0]
+    
+    # test cart newwer cart stuff
+    orders = TestCart.objects.filter(cartOwner=user)
+    cart = orders.filter(status='b')[0]
+    #for context to get id etc
+    order = cart
+    
+    #continue with original code with newer cart injected
     cart.status = 'p'
     cart.save()
     try:
@@ -384,8 +345,15 @@ def completeOrder(request,):
     cart.cartOwner = request.user
     cart.save()
 
+
+    context = {
+        'user': user,
+        'order': order,
+    }
+
+
     #return HttpResponse("Your order is complete")
-    return render(request, 'OrderAccepted.html')
+    return render(request, 'OrderAccepted.html', context=context)
 
 
 def addressForm(request,):
