@@ -86,6 +86,15 @@ class TestCart(models.Model):
         return f'{self.cartOwner}\'s Cart/Order id#  {self.id} total: {self.getTotal()}'
 
 
+    def putInCart(self, product):
+        """puts in cart, buy first making it a cart item from cart item class """
+        print(product)
+        user = self.cartOwner
+        cartItem = CartItem(m=product,user_id=user)
+        cartItem.save()
+        self.itemsInCart.add(cartItem)
+        self.save()
+
 
 
 
