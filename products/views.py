@@ -29,9 +29,12 @@ def index(request):
 
     ## cart stuff
     #intitialize cart = False
+    #which is a hack to keep population of context dict from crashing :()
     cart = False
+    testCart = False
 
     if request.user.is_authenticated:
+        print(request.user.email)
         username = request.user.username
         print(username)
         id =(request.user.id)
@@ -46,6 +49,9 @@ def index(request):
         
         #testCart
         user = request.user
+        if TestCart.objects.filter(cartOwner=user, status='b').count() < 1:
+            testCart = TestCart(cartOwner=user, status='b')
+            testCart.save()
         testCart = TestCart.objects.filter(cartOwner=user, status='b')[0]
         print(testCart)
         if testCart.itemsInCart.count() < 1:
