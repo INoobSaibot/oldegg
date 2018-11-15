@@ -116,10 +116,12 @@ def addToCart(request, ):
 
     if request.user.is_authenticated:
         username = request.user.username
+        user = request.user
         print(username)
         id =(request.user.id)
 
         cart = Cart.objects.filter(cartOwner=request.user, status='b')[0]
+        testCart = TestCart.objects.filter(cartOwner=user, status='b')[0]
         try:
             cart.productList.add(product)
             cart.save()
@@ -129,6 +131,14 @@ def addToCart(request, ):
             cart.save()
             cart.cartOwner = request.user
             cart.save()
+
+        #same but for new test cart class
+        try:
+            testCart.putInCart(product)
+        
+        except Exception as e:
+            print(e)
+    
     else:
         # these next to lines ensure user is sent back
         # to that same items page upon a successful log in
