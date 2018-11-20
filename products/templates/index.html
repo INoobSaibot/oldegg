@@ -15,7 +15,7 @@
   </ul>
   <p>You have visited this page {{ num_visits }}{% if num_visits == 1 %} time{% else %} times{% endif %}.</p>
 
-  <h1>Your Cart Contents:</h1>
+  <!--<h1>Your Cart Contents:</h1>
   {% if cart.productList %}
   <form action = "/products/removeFromCart" method="post">
   {% csrf_token %}
@@ -36,10 +36,10 @@
 {% else %}
   <p>Is empty</p>
 {% endif %}
-
+-->
 <!--Test Cart!!! that allows quantities and repeats-->
 <br><br>
-<h1>Your Test Cart Contents:</h1>
+<h1>Your Cart Contents:</h1>
 {% if testCart.itemsInCart %}
 <form action = "/products/removeFromTestCart" method="post">
   {% csrf_token %}

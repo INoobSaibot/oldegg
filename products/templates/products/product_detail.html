@@ -15,18 +15,50 @@
     
     <h4>Qoh:</h4>
 
-    {% for each in product.productinstance_set.all %}
-      <hr>
+    <!--{percent for each in product.productinstance_set.all %}-->
+      <!--<hr>-->
+      <!--
       <p class="{% if each.status == 'a' %}text-success{% elif each.status == 't' %}text-danger{% else %}text-warning{% endif %}">{{ each.get_status_display }}</p>
       {% if each.status != 'a' %}
         <p><strong>Due to be reordered:</strong> {{each.reorder}}</p>
       {% endif %}
       <p><strong>Manufacturer:</strong> {{each.manufacturer}}</p>
       <p class="text-muted"><strong>Id:</strong> {{each.id}}</p>
-    {% endfor %}
+    {percentsign endfor %}
   </div>
 </form>
+{percentsign% endblock %}
+-->
+
+<!--Test Cart!!! that allows quantities and repeats-->
+<br><br>
+<h1>Your Cart Contents:</h1>
+{% if testCart.itemsInCart %}
+<form action = "/products/removeFromTestCart" method="post">
+  {% csrf_token %}
+  <ul>
+    {% for cartItem in testCart.itemsInCart.all %}
+      <li><button type="submit" name="pk" id="{{forloop.counter}}" value={{cartItem.pk}}>X</button>
+        {{cartItem.m}} -- <button type="submit" name="increase" value={{cartItem.pk}}>
+           + </button> {{cartItem.quantity}} <button type="submit" name="decrease" value="{{cartItem.pk}}"> - </button>
+        -- ${{cartItem.getPrice}} -- {{cartItem.getLineTotal}}
+            
+      </li>
+      {% endfor %}
+  </ul>
+</form>TestCart Total: {{testCart.getTotal}}
+
+<form action="/products/order" method="post">
+  {% csrf_token %}
+<input type="submit" name="order" id="order" value="order">
+</form>
+
+{% else %}
+  <p>{{request.user}}'s Test Cart seems to be empty or missing!</p>
+{% endif %}
+<br><br><br>
+
+
+
+
 {% endblock %}
-
-
-<input type="submit" name="choice" id="choice{{forloop.counter}}" value="{{product.itemNumber }}">

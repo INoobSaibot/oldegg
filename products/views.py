@@ -98,11 +98,54 @@ class StoreListView(generic.ListView):
 
 
 class ProductDetailView(generic.DetailView):
+
     model = Product
+
+    def get_context_data(self, **kwargs):
+        # call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        ## Add in a QuerySet of all the ...
+        request = self.request
+        context['testCart'] = getCart(request)
+        print(self.request.user)
+        print(Product.objects.all())
+        return context
 
 class CartListView(generic.ListView):
     model = Product
 
+def getCart(request,):
+     ## cart stuff
+    #intitialize cart = False
+    #which is a hack to keep population of context dict from crashing :()
+    cart = False
+    testCart = False
+
+    if request.user.is_authenticated:
+        print(request.user.email)
+        username = request.user.username
+        print(username)
+        id =(request.user.id)
+        try:
+            cart = Cart.objects.filter(cartOwner=request.user, status = 'b')[0]
+        except:
+            c = Cart(cartOwner=request.user, status='b', shoppingSince=timezone.now())
+            c.save()
+        if cart:
+            if cart_is_empty(cart):
+                cart=False
+        
+        #testCart
+        user = request.user
+        if TestCart.objects.filter(cartOwner=user, status='b').count() < 1:
+            testCart = TestCart(cartOwner=user, status='b')
+            testCart.save()
+        testCart = TestCart.objects.filter(cartOwner=user, status='b')[0]
+        print(testCart)
+        if testCart.itemsInCart.count() < 1:
+            testCart = False
+        return testCart
+    pass
 
 def addToCart(request, ):
     # some of this is all hard coded just to test will fix
