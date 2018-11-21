@@ -107,8 +107,6 @@ class ProductDetailView(generic.DetailView):
         ## Add in a QuerySet of all the ...
         request = self.request
         context['testCart'] = getCart(request)
-        print(self.request.user)
-        print(Product.objects.all())
         return context
 
 class CartListView(generic.ListView):
@@ -153,8 +151,10 @@ def addToCart(request, ):
     # why many carts you ask? IM GLAD YOU ASKED!!!
         ##CARTS can immediatly be converted to orders, via, status atribute
         ### Example, browsing, ORder, other stuff...
+    print("Add to cart")
     user = None
     username = None
+    print(request.POST)
     product = Product.objects.get(itemNumber=request.POST['choice'])
 
     if request.user.is_authenticated:
