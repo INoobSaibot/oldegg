@@ -4,8 +4,10 @@
   <h1>We call it: {{ product.name }}</h1>
   <form action = "/products/addToCart" method="post">
     {% csrf_token %}
-
-  <p><strong>Brand:</strong> <a href="">{{ product.brand }}</a></p> <img src="/.{{product.picture}}.gif" alt="" style="width: 200px; height:210px;"><!-- detail link not yet defined -->
+    {% load static %}
+<!-- <link rel="stylesheet" href="{% static 'css/styles.css' %}"> -->
+  <p><strong>Brand:</strong> <a href="">{{ product.brand }}</a></p>
+  <img src="{% static 'product_pictures/'%}{{product.pk}}.jpg" alt="failed to load {% static 'product_pictures/'%}{{product.pk}}.jpg" style="width: 200px; height:210px;"><!-- detail link not yet defined -->
   <p><strong>Description:</strong> {{ product.description }}</p>
   <p><strong>Item Number:</strong> {{ product.itemNumber }}</p> 
   <p><strong>Price:</strong> {{ product.price }}</p><input type="submit" name="choice" value="{{product.itemNumber}}">
