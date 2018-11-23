@@ -224,12 +224,11 @@ def removeFromTestCart(request,):
         pk = decreaseQuantity
         cartItem = CartItem.objects.get(pk=pk)
         cartItem.decreaseQuantity()
-    
-    product = cartItem.m
+    print(posted.get("next"))
+    path=posted.get("next")
+    #product = cartItem.m
+    return HttpResponseRedirect(path)
     return HttpResponseRedirect('product/'+ str(product.pk))
-
-
-
 
 
 def removeFromCart(request, ):

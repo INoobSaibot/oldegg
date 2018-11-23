@@ -25,7 +25,8 @@
 {% if testCart.itemsInCart %}
 <form action = "/products/removeFromTestCart" method="post">
   {% csrf_token %}
-  <ul>
+  <input type="hidden" name="next" id="" value="{{request.path}}">
+  <ul style="list-style-type:none">
     {% for cartItem in testCart.itemsInCart.all %}
       <li><button type="submit" name="pk" id="{{forloop.counter}}" value={{cartItem.pk}}>X</button>
         {{cartItem.m}} -- <button type="submit" name="increase" value={{cartItem.pk}}>
@@ -40,6 +41,7 @@
 <form action="/products/order" method="post">
   {% csrf_token %}
 <input type="submit" name="order" id="order" value="order">
+
 </form>
 
 {% else %}
